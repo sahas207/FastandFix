@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Fast&amp;Fix · Custom PC Workshop</title>
+    <meta name="theme-color" content="#0a0a0c">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://neonforge-t73m.whacka.app/favicon-32.png">
+    
+    <!-- Original Theme CSS + Tailwind for Custom Modals & Animations -->
+    <link rel="stylesheet" crossorigin="" href="https://neonforge-t73m.whacka.app/assets/index-CSXX9oxW.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      :root {
+        --sat: env(safe-area-inset-top, 0px);
+        --sab: env(safe-area-inset-bottom, 0px);
+        --sal: env(safe-area-inset-left, 0px);
+        --sar: env(safe-area-inset-right, 0px);
+      }
+      html {
+        min-height: calc(100% + var(--sat));
+        -webkit-tap-highlight-color: transparent;
+        -webkit-overflow-scrolling: touch;
+        touch-action: manipulation;
+        scroll-behavior: smooth;
+      }
+      html, body { overscroll-behavior: none; margin: 0; }
+      body { min-height: 100dvh; overflow: hidden; background: #0A0A0C; color: #fff; -webkit-user-select: none; user-select: none; }
+      input, textarea, [contenteditable] { -webkit-user-select: text; user-select: text; }
+      #app-shell { display: contents; }
+      #app-shell > #root { position: fixed; top: 0; left: 0; right: 0; bottom: 0; }
+
+      /* Whacka Watermark Hide */
+      [data-whacka-badge], a[href*="whacka.app/?utm_source=whacka_badge"] {
+          display: none !important;
+      }
+
+      /* Header Logo Override */
+      a[href="#top"] span.relative.grid {
+          background: url('./logo.jpg') no-repeat center center, linear-gradient(135deg, #7C5CFF, #2E9BFF) !important;
+          background-size: cover !important;
+          border-radius: 50% !important;
+          border: 2px solid #7C5CFF !important;
+          box-shadow: 0 0 15px rgba(124,92,255,0.8) !important;
+          width: 44px !important;
+          height: 44px !important;
+          transition: transform 0.3s ease !important;
+      }
+      a[href="#top"]:hover span.relative.grid {
+          transform: scale(1.1) !important;
+          box-shadow: 0 0 25px rgba(124,92,255,1) !important;
+      }
+
+      /* Footer Logo Override */
+      footer#contact div.flex.items-center.gap-2\.5 > span.grid {
+          background: url('./logo.jpg') no-repeat center center, linear-gradient(135deg, #7C5CFF, #2E9BFF) !important;
+          background-size: cover !important;
+          border-radius: 50% !important;
+          border: 2px solid #7C5CFF !important;
+          box-shadow: 0 0 15px rgba(124,92,255,0.8) !important;
+          width: 40px !important;
+          height: 40px !important;
+          transition: transform 0.3s ease !important;
+      }
+
+      /* Hero Image Slider Smooth Transitions */
+      .hero-slide {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          opacity: 0;
+          transform: scale(1.08);
+          transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .hero-slide.active {
+          opacity: 1;
+          transform: scale(1);
+      }
+
+      /* ========================================================
+         FIXED: Explicit Product Card & Image Box Sizing
+         (Me kallen thamai ara images nathi wena eka fix wenne)
+         ======================================================== */
+      .product-card-box {
+          display: flex !important;
+          flex-direction: column !important;
+          height: 100% !important;
+          min-height: 440px !important;
+          border-radius: 16px !important;
+          overflow: hidden !important;
+          background: linear-gradient(180deg, #12121C 0%, #0B0B10 100%) !important;
+          border: 1px solid rgba(255, 255, 255, 0.09) !important;
+          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease !important;
+      }
+      .product-card-box:hover {
+          transform: translateY(-6px) !important;
+          border-color: rgba(124, 92, 255, 0.65) !important;
+          box-shadow: 0 22px 45px -15px rgba(124, 92, 255, 0.4) !important;
+      }
+      .product-img-wrapper {
+          position: relative !important;
+          width: 100% !important;
+          height: 210px !important;
+          min-height: 210px !important;
+          max-height: 210px !important;
+          flex-shrink: 0 !important;
+          overflow: hidden !important;
+          background: #09090D !important;
+          cursor: pointer !important;
+      }
+      .product-img-wrapper img {
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: cover !important;
+          object-position: center !important;
+          display: block !important;
+          transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease !important;
+      }
+      .product-card-box:hover .product-img-wrapper img {
+          transform: scale(1.1) !important;
+      }
+      .product-info-wrapper {
+          display: flex !important;
+          flex-direction: column !important;
+          flex-grow: 1 !important;
+          padding: 16px 20px !important;
+      }
+
+      /* Product Photo Shine / Laser Sweep Effect */
+      .product-img-wrapper::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -130%;
+          width: 65%;
+          height: 100%;
+          background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.24) 50%, rgba(255,255,255,0) 100%);
+          transform: skewX(-25deg);
+          transition: left 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+          pointer-events: none;
+          z-index: 2;
+      }
+      .product-card-box:hover .product-img-wrapper::after {
+          left: 140%;
+      }
+
+      /* Staggered Entrance Animation */
+      @keyframes cardWaveIn {
+          0% { opacity: 0; transform: translateY(28px) scale(0.95); filter: blur(4px); }
+          100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+      }
+      .animate-card-wave {
+          opacity: 0;
+          animation: cardWaveIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      /* WhatsApp Pulse Ring */
+      @keyframes pulseRing {
+          0% { transform: scale(0.95); opacity: 0.8; }
+          70% { transform: scale(1.35); opacity: 0; }
+          100% { transform: scale(1.35); opacity: 0; }
+      }
+      .wa-pulse::before {
+          content: '';
+          position: absolute;
+          inset: -4px;
+          border-radius: 9999px;
+          background: #25D366;
+          z-index: -1;
+          animation: pulseRing 2s infinite;
+      }
+
+      @keyframes modalPop {
+          0% { opacity: 0; transform: scale(0.94) translateY(12px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
+      }
+      .animate-modal {
+          animation: modalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .credit-card-bg {
+          background: radial-gradient(circle at 100% 0%, rgba(46,155,255,0.4) 0%, rgba(124,92,255,0.35) 45%, rgba(16,16,24,0.95) 100%);
+      }
+    </style>
+</head>
+<body>
+    <div id="app-shell">
+        <div id="root">
+            <div class="flex h-full flex-col bg-[#0A0A0C] text-white">
+                
+                <!-- HEADER -->
+                <header class="relative z-30 shrink-0 border-b border-white/[0.07] bg-[#0A0A0C]/85 backdrop-blur-xl">
+                    <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-3.5 md:px-8 md:py-4">
+                        <a href="#top" class="group flex items-center gap-2.5">
+                            <span class="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[#7C5CFF] to-[#2E9BFF] shadow-[0_0_24px_-4px_rgba(124,92,255,0.9)]">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="text-white"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="8" y="8" width="8" height="8" rx="1"></rect></svg>
+                            </span>
+                            <span class="font-display text-[17px] font-extrabold tracking-tight text-white">FAST<span class="text-[#8B7BFF]">&amp;FIX</span></span>
+                        </a>
+                        <nav class="hidden items-center gap-1 lg:flex">
+                            <a href="#builds" class="rounded-full px-4 py-2 text-[13.5px] font-medium text-white/60 transition hover:bg-white/[0.06] hover:text-white">Builds</a>
+                            <a href="#categories" class="rounded-full px-4 py-2 text-[13.5px] font-medium text-white/60 transition hover:bg-white/[0.06] hover:text-white">Categories</a>
+                            <a href="#components" class="rounded-full px-4 py-2 text-[13.5px] font-medium text-white/60 transition hover:bg-white/[0.06] hover:text-white">Featured</a>
+                            <a href="#contact" class="rounded-full px-4 py-2 text-[13.5px] font-medium text-white/60 transition hover:bg-white/[0.06] hover:text-white">Support</a>
+                        </nav>
+                        <div class="flex items-center gap-2.5">
+                            <!-- CART TRIGGER BUTTON -->
+                            <button onclick="toggleCart(true)" type="button" class="relative grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-white/80 transition hover:border-[#7C5CFF]/50 hover:text-white active:scale-95" aria-label="Open cart">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 10a4 4 0 0 1-8 0"></path><path d="M3.103 6.034h17.794"></path><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"></path></svg>
+                                <span id="cart-badge" class="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-gradient-to-br from-[#7C5CFF] to-[#2E9BFF] px-1 text-[10px] font-bold text-white shadow-[0_0_14px_rgba(124,92,255,0.85)]">3</span>
+                            </button>
+                            <button onclick="openCategoryModal('all')" class="hidden rounded-xl bg-white px-5 py-2.5 text-[13.5px] font-semibold text-[#0A0A0C] transition hover:shadow-[0_0_34px_-6px_rgba(255,255,255,0.65)] sm:block">Browse Catalog</button>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- MAIN SCROLLABLE AREA -->
+                <main id="main-scroll" class="scroll-slim min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+                    
+                    <!-- HERO SECTION WITH SMOOTH PC PHOTO SLIDER -->
+                    <section id="top" class="relative overflow-hidden">
+                        <div class="absolute inset-0">
+                            <img id="hero-bg-img" src="https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/7df0cd5c-1c7a-404c-8b46-02c46be407ef.jpg" alt="Gaming PC Background" class="h-full w-full object-cover object-center opacity-[0.32] transition-all duration-1000">
+                            <div class="absolute inset-0 bg-gradient-to-b from-[#0A0A0C]/70 via-[#0A0A0C]/90 to-[#0A0A0C]"></div>
+                            <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(124,92,255,0.35),transparent_55%),radial-gradient(circle_at_85%_25%,rgba(46,155,255,0.28),transparent_52%)]"></div>
+                            <div class="absolute inset-0 grid-lines"></div>
+                        </div>
+
+                        <div class="relative mx-auto grid w-full max-w-7xl items-center gap-12 px-4 pb-16 pt-12 md:px-8 md:pb-24 md:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+                            <div>
+                                <p class="font-mono-tech text-[10px] uppercase tracking-[0.3em] text-white/40">Fast&amp;Fix · Custom PC Workshop Sri Lanka</p>
+                                <div class="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3.5 py-1.5 backdrop-blur">
+                                    <span class="relative flex h-2 w-2">
+                                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#25D366] opacity-75"></span>
+                                        <span class="relative inline-flex h-2 w-2 rounded-full bg-[#25D366]"></span>
+                                    </span>
+                                    <span class="font-mono-tech text-[10.5px] uppercase tracking-[0.22em] text-white/80">Islandwide Delivery · Ready to Ship</span>
+                                </div>
+                                <h1 class="mt-6 font-display text-[40px] font-extrabold leading-[1.02] tracking-[-0.035em] text-white sm:text-6xl lg:text-[66px]">Build Your<br>Ultimate<br><span class="text-gradient">Dream Machine.</span></h1>
+                                <p class="mt-6 max-w-lg text-[15px] leading-relaxed text-white/60 sm:text-base">Hand-assembled, liquid-cooled and stress-tested for 48 hours before it ever leaves our Battaramulla bench. Flagship parts, obsessive cable work, zero compromises.</p>
+                                
+                                <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+                                    <button onclick="openCategoryModal('all')" type="button" class="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-[#7C5CFF] to-[#2E9BFF] px-7 py-4 text-[15px] font-semibold text-white transition-all duration-300 hover:shadow-[0_0_50px_-8px_rgba(124,92,255,0.95)] active:scale-[0.98]">
+                                        <span class="relative">Shop All 24 Components</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="relative transition-transform group-hover:translate-x-1"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                                    </button>
+                                    <a href="#categories" class="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-4 text-[15px] font-medium text-white/80 backdrop-blur transition hover:border-white/25 hover:bg-white/[0.08] hover:text-white">
+                                        Explore Categories
+                                    </a>
+                                </div>
+
+                                <dl class="mt-12 grid max-w-md grid-cols-2 gap-x-4 gap-y-5 border-t border-white/[0.08] pt-7 sm:grid-cols-4">
+                                    <div><dt class="font-display text-xl font-bold text-white">12,400+</dt><dd class="mt-0.5 font-mono-tech text-[10px] uppercase tracking-[0.16em] text-white/40">Rigs built</dd></div>
+                                    <div><dt class="font-display text-xl font-bold text-white">4.9/5</dt><dd class="mt-0.5 font-mono-tech text-[10px] uppercase tracking-[0.16em] text-white/40">2.1k reviews</dd></div>
+                                    <div><dt class="font-display text-xl font-bold text-white">48H</dt><dd class="mt-0.5 font-mono-tech text-[10px] uppercase tracking-[0.16em] text-white/40">Stress-tested</dd></div>
+                                    <div><dt class="font-display text-xl font-bold text-white">3YR</dt><dd class="mt-0.5 font-mono-tech text-[10px] uppercase tracking-[0.16em] text-white/40">Warranty</dd></div>
+                                </dl>
+                            </div>
+
+                            <!-- SMOOTH SWITCHING PC PHOTO SHOWCASE -->
+                            <div class="relative">
+                                <div class="absolute -inset-6 rounded-[2.5rem] bg-[radial-gradient(circle_at_60%_30%,rgba(124,92,255,0.35),transparent_65%)] blur-2xl animate-pulse-glow"></div>
+                                <div class="relative overflow-hidden rounded-[26px] border border-white/10 bg-[#0E0E14] shadow-[0_40px_100px_-40px_rgba(0,0,0,0.95)] h-[300px] sm:h-[390px] lg:h-[440px]">
+                                    
+                                    <!-- Slides -->
+                                    <img class="hero-slide active" src="https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/7df0cd5c-1c7a-404c-8b46-02c46be407ef.jpg" alt="Titan Rig">
+                                    <img class="hero-slide" src="https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/ba1ee6c8-9a13-42d6-a578-d7e32d3fd67d.jpg" alt="Hydro Loop Rig">
+                                    <img class="hero-slide" src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1000&q=80" alt="Neon Cyber Rig">
+                                    <img class="hero-slide" src="https://images.unsplash.com/photo-1624705002806-5d72df19c3ad?auto=format&fit=crop&w=1000&q=80" alt="White Frost Rig">
+
+                                    <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0A0A0C] via-[#0A0A0C]/25 to-transparent"></div>
+                                    
+                                    <!-- Slide Info & Dots -->
+                                    <div class="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-3 p-4 sm:p-5">
+                                        <div>
+                                            <p class="font-mono-tech text-[10px] uppercase tracking-[0.22em] text-[#9B87FF]" id="hero-slide-tag">Signature Build · 01</p>
+                                            <p class="mt-1 font-display text-lg font-bold text-white transition-all" id="hero-slide-title">Fast&amp;Fix · Titan RTX 4090</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <div id="hero-dots" class="flex items-center gap-1.5 rounded-full border border-white/10 bg-black/60 px-3 py-2 backdrop-blur">
+                                                <button onclick="setHeroSlide(0)" class="h-2 w-6 rounded-full bg-[#7C5CFF] transition-all"></button>
+                                                <button onclick="setHeroSlide(1)" class="h-2 w-2 rounded-full bg-white/30 transition-all"></button>
+                                                <button onclick="setHeroSlide(2)" class="h-2 w-2 rounded-full bg-white/30 transition-all"></button>
+                                                <button onclick="setHeroSlide(3)" class="h-2 w-2 rounded-full bg-white/30 transition-all"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Floating Specs Badges -->
+                                <div class="pointer-events-none absolute -left-3 top-8 hidden flex-col gap-2 sm:flex">
+                                    <div class="animate-float flex items-center gap-2 rounded-xl border border-white/10 bg-[#0C0C12]/85 px-3 py-2 backdrop-blur-md">
+                                        <span class="h-2 w-2 rounded-full bg-[#7C5CFF]"></span>
+                                        <span class="font-mono-tech text-[10.5px] tracking-wide text-white/80">RTX 4090 · 24GB</span>
+                                    </div>
+                                    <div class="animate-float flex items-center gap-2 rounded-xl border border-white/10 bg-[#0C0C12]/85 px-3 py-2 backdrop-blur-md" style="animation-delay: 900ms;">
+                                        <span class="h-2 w-2 rounded-full bg-[#2E9BFF]"></span>
+                                        <span class="font-mono-tech text-[10.5px] tracking-wide text-white/80">Core i9-14900K</span>
+                                    </div>
+                                    <div class="animate-float flex items-center gap-2 rounded-xl border border-white/10 bg-[#0C0C12]/85 px-3 py-2 backdrop-blur-md" style="animation-delay: 1800ms;">
+                                        <span class="h-2 w-2 rounded-full bg-[#25D366]"></span>
+                                        <span class="font-mono-tech text-[10.5px] tracking-wide text-white/80">DDR5 7200MHz</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 01 — INTERACTIVE CATEGORIES SECTION -->
+                    <section id="categories" class="relative mx-auto w-full max-w-7xl px-4 py-16 md:px-8 md:py-24">
+                        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                            <div>
+                                <p class="font-mono-tech text-[10.5px] uppercase tracking-[0.28em] text-[#8B7BFF]">// 01 — Components (Click to View Animated List)</p>
+                                <h2 class="mt-3 max-w-xl font-display text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl md:text-[42px]">Every part, curated by people who actually build.</h2>
+                            </div>
+                            <p class="max-w-sm text-sm leading-relaxed text-white/50">Click on any category card below to explore our full HD photo gallery &amp; instant Sri Lankan price list.</p>
+                        </div>
+
+                        <div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 md:mt-14">
+                            <!-- Graphic Cards -->
+                            <button onclick="openCategoryModal('gpu')" type="button" class="card-hover group relative block h-full w-full overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0D0D12] text-left transition hover:border-[#7C5CFF]/60">
+                                <div class="photo-shine-wrap relative h-48 overflow-hidden">
+                                    <img src="https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/bcbd4e56-69d8-4709-8849-fd1da1a3a285.jpg" alt="Graphic Cards" class="h-full w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-110 group-hover:opacity-100">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0D12] via-[#0D0D12]/30 to-transparent"></div>
+                                    <span class="absolute left-3 top-3 rounded-md border border-[#7C5CFF]/40 bg-black/70 px-2.5 py-1 font-mono-tech text-[9.5px] uppercase tracking-[0.18em] text-[#C6BAFF] backdrop-blur">GPU SERIES</span>
+                                </div>
+                                <div class="relative p-5">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <h3 class="font-display text-lg font-bold text-white group-hover:text-[#8B7BFF] transition">Graphic Cards</h3>
+                                        <span class="rounded-lg bg-white/5 p-1.5 text-white/50 group-hover:bg-[#7C5CFF] group-hover:text-white transition">↗</span>
+                                    </div>
+                                    <p class="mt-1.5 text-[12.5px] leading-relaxed text-white/50">RTX 4090, 4080 Super, 4070 Ti, 4060 Ti &amp; Radeon RX.</p>
+                                    <p class="mt-4 font-mono-tech text-[10.5px] uppercase tracking-[0.18em] text-[#8B7BFF]">Click to view 6 models →</p>
+                                </div>
+                            </button>
+
+                            <!-- Processors -->
+                            <button onclick="openCategoryModal('cpu')" type="button" class="card-hover group relative block h-full w-full overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0D0D12] text-left transition hover:border-[#7C5CFF]/60">
+                                <div class="photo-shine-wrap relative h-48 overflow-hidden">
+                                    <img src="https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/251b9b23-8d60-46a0-ae81-e180bd3b8215.jpg" alt="Processors" class="h-full w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-110 group-hover:opacity-100">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0D12] via-[#0D0D12]/30 to-transparent"></div>
+                                    <span class="absolute left-3 top-3 rounded-md border border-[#7C5CFF]/40 bg-black/70 px-2.5 py-1 font-mono-tech text-[9.5px] uppercase tracking-[0.18em] text-[#C6BAFF] backdrop-blur">CPU SILICON</span>
+                                </div>
+                                <div class="relative p-5">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <h3 class="font-display text-lg font-bold text-white group-hover:text-[#8B7BFF] transition">Processors</h3>
+                                        <span class="rounded-lg bg-white/5 p-1.5 text-white/50 group-hover:bg-[#7C5CFF] group-hover:text-white transition">↗</span>
+                                    </div>
+                                    <p class="mt-1.5 text-[12.5px] leading-relaxed text-white/50">Intel 14th Gen Core i9/i7/i5 &amp; AMD Ryzen 7000 X3D.</p>
+                                    <p class="mt-4 font-mono-tech text-[10.5px] uppercase tracking-[0.18em] text-[#8B7BFF]">Click to view 6 models →</p>
+                                </div>
+                            </button>
+
+                            <!-- Motherboards -->
+                            <button onclick="openCategoryModal('mobo')" type="button" class="card-hover group relative block h-full w-full overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0D0D12] text-left transition hover:border-[#7C5CFF]/60">
+                                <div class="photo-shine-wrap relative h-48 overflow-hidden">
+                                    <img src="https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/7f367d4d-a2d3-4b44-a078-12d2c5557053.jpg" alt="Motherboards" class="h-full w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-110 group-hover:opacity-100">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0D12] via-[#0D0D12]/30 to-transparent"></div>
+                                    <span class="absolute left-3 top-3 rounded-md border border-[#7C5CFF]/40 bg-black/70 px-2.5 py-1 font-mono-tech text-[9.5px] uppercase tracking-[0.18em] text-[#C6BAFF] backdrop-blur">CHIPSET</span>
+                                </div>
+                                <div class="relative p-5">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <h3 class="font-display text-lg font-bold text-white group-hover:text-[#8B7BFF] transition">Motherboards</h3>
+                                        <span class="rounded-lg bg-white/5 p-1.5 text-white/50 group-hover:bg-[#7C5CFF] group-hover:text-white transition">↗</span>
+                                    </div>
+                                    <p class="mt-1.5 text-[12.5px] leading-relaxed text-white/50">ASUS ROG Maximus, Strix Z790, MSI X670E &amp; AORUS.</p>
+                                    <p class="mt-4 font-mono-tech text-[10.5px] uppercase tracking-[0.18em] text-[#8B7BFF]">Click to view 6 models →</p>
+                                </div>
+                            </button>
+
+                            <!-- Peripherals -->
+                            <button onclick="openCategoryModal('gear')" type="button" class="card-hover group relative block h-full w-full overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0D0D12] text-left transition hover:border-[#7C5CFF]/60">
+                                <div class="photo-shine-wrap relative h-48 overflow-hidden">
+                                    <img src="https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/6ba1d657-39dd-4cd1-853e-93189aea4b1f.jpg" alt="Peripherals" class="h-full w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-110 group-hover:opacity-100">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0D12] via-[#0D0D12]/30 to-transparent"></div>
+                                    <span class="absolute left-3 top-3 rounded-md border border-[#7C5CFF]/40 bg-black/70 px-2.5 py-1 font-mono-tech text-[9.5px] uppercase tracking-[0.18em] text-[#C6BAFF] backdrop-blur">GEAR &amp; RAM</span>
+                                </div>
+                                <div class="relative p-5">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <h3 class="font-display text-lg font-bold text-white group-hover:text-[#8B7BFF] transition">Peripherals &amp; Cooling</h3>
+                                        <span class="rounded-lg bg-white/5 p-1.5 text-white/50 group-hover:bg-[#7C5CFF] group-hover:text-white transition">↗</span>
+                                    </div>
+                                    <p class="mt-1.5 text-[12.5px] leading-relaxed text-white/50">DDR5 RAM, Gen4 SSDs, Liquid Coolers &amp; eSports Gear.</p>
+                                    <p class="mt-4 font-mono-tech text-[10.5px] uppercase tracking-[0.18em] text-[#8B7BFF]">Click to view 6 models →</p>
+                                </div>
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- 02 — FEATURED PRODUCTS -->
+                    <section id="components" class="relative border-y border-white/[0.06] bg-[#0B0B0F]">
+                        <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(124,92,255,0.14),transparent_70%)]"></div>
+                        <div class="relative mx-auto w-full max-w-7xl px-4 py-16 md:px-8 md:py-24">
+                            <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                                <div>
+                                    <p class="font-mono-tech text-[10.5px] uppercase tracking-[0.28em] text-[#8B7BFF]">// 02 — Featured Flagships</p>
+                                    <h2 class="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl md:text-[42px]">The parts everyone asks for.</h2>
+                                </div>
+                                <button onclick="openCategoryModal('all')" class="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-[13px] font-medium text-white/80 transition hover:border-[#7C5CFF] hover:text-white">View All 24 Products →</button>
+                            </div>
+
+                            <!-- Featured Grid Rendered by JS -->
+                            <div id="featured-grid" class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 md:mt-14 lg:grid-cols-4"></div>
+                        </div>
+                    </section>
+
+                    <!-- 03 — THE FORGE -->
+                    <section id="builds" class="mx-auto w-full max-w-7xl px-4 py-16 md:px-8 md:py-24">
+                        <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+                            <div class="relative">
+                                <div class="absolute -inset-4 rounded-[2rem] bg-[radial-gradient(circle_at_30%_20%,rgba(46,155,255,0.28),transparent_60%)] blur-2xl"></div>
+                                <div class="relative overflow-hidden rounded-[24px] border border-white/10 bg-[#0D0D12]">
+                                    <img src="https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/ba1ee6c8-9a13-42d6-a578-d7e32d3fd67d.jpg" alt="Custom water cooling loop" class="h-[260px] w-full object-cover sm:h-[340px] lg:h-[420px]">
+                                    <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0A0A0C]/90 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-4 left-4 flex items-center gap-2 rounded-xl border border-white/10 bg-black/60 px-3 py-2 backdrop-blur">
+                                        <span class="h-2 w-2 rounded-full bg-[#5FB2FF] animate-ping"></span>
+                                        <span class="font-mono-tech text-[10.5px] uppercase tracking-[0.16em] text-white/80">Bench 04 · Thermal Soak Tested</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="font-mono-tech text-[10.5px] uppercase tracking-[0.28em] text-[#8B7BFF]">// 03 — The Forge</p>
+                                <h2 class="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl md:text-[42px]">Three days of work behind every machine.</h2>
+                                <p class="mt-4 max-w-lg text-sm leading-relaxed text-white/50">No drop-shipping, no mystery pre-builts. Each rig is assembled on our bench, tuned by hand and documented with a thermal report you keep.</p>
+                                <div class="mt-8 space-y-3">
+                                    <div class="flex items-start gap-4 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4">
+                                        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-white/10 bg-[#12121A] text-[#8B7BFF] font-bold">01</span>
+                                        <div><h3 class="font-display text-[15px] font-semibold text-white">Part Selection</h3><p class="mt-1 text-[13px] text-white/50">We match silicon to your frame target — no bottleneck, no overspend.</p></div>
+                                    </div>
+                                    <div class="flex items-start gap-4 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4">
+                                        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-white/10 bg-[#12121A] text-[#8B7BFF] font-bold">02</span>
+                                        <div><h3 class="font-display text-[15px] font-semibold text-white">Hand Assembly</h3><p class="mt-1 text-[13px] text-white/50">Custom-sleeved cables, thermal paste applied by hand, clean routing.</p></div>
+                                    </div>
+                                    <div class="flex items-start gap-4 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4">
+                                        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-white/10 bg-[#12121A] text-[#8B7BFF] font-bold">03</span>
+                                        <div><h3 class="font-display text-[15px] font-semibold text-white">48h Validation</h3><p class="mt-1 text-[13px] text-white/50">Cinebench, FurMark and a full thermal soak before delivery.</p></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- FOOTER WITH DEVELOPER CREDIT "SAHAS" -->
+                    <footer id="contact" class="relative border-t border-white/[0.08] bg-[#08080A]">
+                        <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#7C5CFF]/60 to-transparent"></div>
+                        <div class="mx-auto w-full max-w-7xl px-4 pb-20 pt-14 md:px-8 md:pb-16">
+                            <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+                                <div>
+                                    <div class="flex items-center gap-2.5">
+                                        <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[#7C5CFF] to-[#2E9BFF]"></span>
+                                        <span class="font-display text-[17px] font-extrabold tracking-tight text-white">FAST<span class="text-[#8B7BFF]">&amp;FIX</span></span>
+                                    </div>
+                                    <p class="mt-4 max-w-xs text-[13px] leading-relaxed text-white/50">Premium custom PCs and flagship components, assembled by hand at our shop in Kotikawatta, Battaramulla.</p>
+                                </div>
+                                <div>
+                                    <h3 class="font-mono-tech text-[10px] uppercase tracking-[0.24em] text-white/30">Shop Categories</h3>
+                                    <ul class="mt-4 space-y-2.5">
+                                        <li><button onclick="openCategoryModal('gpu')" class="text-[13.5px] text-white/50 transition hover:text-white">Graphic Cards (6)</button></li>
+                                        <li><button onclick="openCategoryModal('cpu')" class="text-[13.5px] text-white/50 transition hover:text-white">Processors (6)</button></li>
+                                        <li><button onclick="openCategoryModal('mobo')" class="text-[13.5px] text-white/50 transition hover:text-white">Motherboards (6)</button></li>
+                                        <li><button onclick="openCategoryModal('gear')" class="text-[13.5px] text-white/50 transition hover:text-white">Peripherals &amp; Cooling (6)</button></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h3 class="font-mono-tech text-[10px] uppercase tracking-[0.24em] text-white/30">Support</h3>
+                                    <ul class="mt-4 space-y-2.5">
+                                        <li><button onclick="toggleSupportPopup()" class="text-[13.5px] text-[#25D366] transition hover:underline">WhatsApp Live Support</button></li>
+                                        <li><a href="mailto:info@fastandfix.com" class="text-[13.5px] text-white/50 transition hover:text-white">Warranty &amp; RMA</a></li>
+                                        <li><a href="mailto:info@fastandfix.com" class="text-[13.5px] text-white/50 transition hover:text-white">Build Consultation</a></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h3 class="font-mono-tech text-[10px] uppercase tracking-[0.24em] text-white/30">Visit our shop</h3>
+                                    <ul class="mt-4 space-y-3 text-[13px] text-white/50">
+                                        <li>27/1-2, Kotikawatta, Angoda, Battaramulla</li>
+                                        <li><button onclick="toggleSupportPopup()" class="text-[#8B7BFF] hover:underline">Hotline: +94 78 439 3176</button></li>
+                                        <li>info@fastandfix.com</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- DEVELOPER CREDIT BAR -->
+                            <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/[0.07] pt-6 sm:flex-row">
+                                <p class="text-[12px] text-white/40">© 2026 Fast&amp;Fix Sri Lanka. All rights reserved.</p>
+                                <div class="inline-flex items-center gap-2 rounded-full border border-[#7C5CFF]/40 bg-[#7C5CFF]/10 px-4 py-1.5 shadow-[0_0_20px_rgba(124,92,255,0.25)]">
+                                    <span class="h-2 w-2 rounded-full bg-[#7C5CFF] animate-ping"></span>
+                                    <span class="font-mono-tech text-[11px] tracking-wider text-white/80">Designed &amp; Developed by <strong class="text-white font-bold text-[#9B87FF]">Sahas</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         1. SLIDE-OVER SHOPPING CART DRAWER (LKR)
+         ========================================== -->
+    <div id="cart-drawer" class="fixed inset-0 z-40 flex justify-end pointer-events-none">
+        <div id="cart-backdrop" onclick="toggleCart(false)" class="absolute inset-0 bg-black/75 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
+        <aside id="cart-panel" class="relative flex h-full w-full max-w-[430px] flex-col border-l border-white/[0.12] bg-[#0A0A10]/95 shadow-2xl backdrop-blur-2xl transition-transform duration-500 translate-x-full">
+            <div class="flex items-center justify-between border-b border-white/[0.08] px-5 py-4">
+                <div class="flex items-center gap-2.5">
+                    <span class="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[#7C5CFF] to-[#2E9BFF] text-white font-bold">🛒</span>
+                    <div>
+                        <h2 class="font-display text-[15px] font-bold text-white">Your Custom Build Cart</h2>
+                        <p id="cart-count-text" class="font-mono-tech text-[10px] uppercase tracking-[0.2em] text-[#8B7BFF]">3 items selected</p>
+                    </div>
+                </div>
+                <button onclick="toggleCart(false)" class="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-white/60 hover:text-white">✕</button>
+            </div>
+
+            <!-- Cart Items List -->
+            <div id="cart-items-container" class="scroll-slim flex-1 overflow-y-auto p-4 space-y-3"></div>
+
+            <!-- Cart Footer -->
+            <div class="border-t border-white/[0.08] bg-[#0D0D14] p-5">
+                <div class="space-y-1.5 text-xs text-white/60">
+                    <div class="flex justify-between"><span>Islandwide Courier</span><span class="text-[#5FB2FF]">Free · Insured</span></div>
+                    <div class="flex justify-between"><span>Assembly &amp; Stress Test</span><span class="text-[#5FB2FF]">Included</span></div>
+                </div>
+                <div class="mt-4 flex items-baseline justify-between border-t border-white/10 pt-3">
+                    <span class="font-mono-tech text-xs uppercase tracking-widest text-white/50">Total (LKR)</span>
+                    <span id="cart-total-price" class="font-display text-2xl font-extrabold text-white">Rs. 0</span>
+                </div>
+                <div class="mt-4 grid grid-cols-1 gap-2.5">
+                    <button onclick="openCheckoutModal()" class="w-full rounded-xl bg-gradient-to-r from-[#7C5CFF] to-[#2E9BFF] py-3.5 text-sm font-bold text-white shadow-[0_0_30px_-5px_rgba(124,92,255,0.8)] transition hover:scale-[1.01] active:scale-95">
+                        Proceed to Checkout &amp; Card Pay →
+                    </button>
+                    <button onclick="checkoutViaWhatsApp()" class="flex w-full items-center justify-center gap-2 rounded-xl border border-[#25D366]/40 bg-[#25D366]/15 py-2.5 text-xs font-semibold text-[#25D366] transition hover:bg-[#25D366] hover:text-white">
+                        Send Full Cart to WhatsApp
+                    </button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- ==========================================
+         2. CATEGORY PRODUCTS EXPLORER MODAL
+         ========================================== -->
+    <div id="category-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 p-3 sm:p-6 backdrop-blur-md">
+        <div class="animate-modal relative flex max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-white/15 bg-[#0B0B10] shadow-[0_0_80px_rgba(124,92,255,0.25)]">
+            <!-- Modal Header -->
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 bg-[#0E0E16] px-6 py-4">
+                <div>
+                    <p class="font-mono-tech text-[10px] uppercase tracking-[0.25em] text-[#8B7BFF]">Fast&amp;Fix Sri Lanka · Click Any Photo to Zoom</p>
+                    <h2 id="cat-modal-title" class="font-display text-2xl font-extrabold text-white">All Components</h2>
+                </div>
+                <!-- Category Filter Pills -->
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <button onclick="renderCategoryItems('all')" id="tab-all" class="cat-tab rounded-xl px-3.5 py-2 text-xs font-semibold bg-[#7C5CFF] text-white transition">All (24)</button>
+                    <button onclick="renderCategoryItems('gpu')" id="tab-gpu" class="cat-tab rounded-xl px-3.5 py-2 text-xs font-semibold bg-white/5 text-white/70 hover:text-white transition">Graphic Cards (6)</button>
+                    <button onclick="renderCategoryItems('cpu')" id="tab-cpu" class="cat-tab rounded-xl px-3.5 py-2 text-xs font-semibold bg-white/5 text-white/70 hover:text-white transition">Processors (6)</button>
+                    <button onclick="renderCategoryItems('mobo')" id="tab-mobo" class="cat-tab rounded-xl px-3.5 py-2 text-xs font-semibold bg-white/5 text-white/70 hover:text-white transition">Motherboards (6)</button>
+                    <button onclick="renderCategoryItems('gear')" id="tab-gear" class="cat-tab rounded-xl px-3.5 py-2 text-xs font-semibold bg-white/5 text-white/70 hover:text-white transition">Peripherals &amp; RAM (6)</button>
+                </div>
+                <button onclick="closeCategoryModal()" class="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/5 text-white/70 hover:bg-red-500/20 hover:text-red-400">✕</button>
+            </div>
+            <!-- Modal Product Grid -->
+            <div id="category-modal-grid" class="scroll-slim grid flex-1 grid-cols-1 gap-5 overflow-y-auto p-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         2B. PHOTO ZOOM LIGHTBOX MODAL
+         ========================================== -->
+    <div id="photo-lightbox" onclick="closePhotoLightbox()" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/90 p-4 backdrop-blur-xl">
+        <div onclick="event.stopPropagation()" class="animate-modal relative max-w-2xl w-full overflow-hidden rounded-3xl border border-white/20 bg-[#0E0E16] p-4 shadow-2xl">
+            <div class="relative h-72 sm:h-96 w-full overflow-hidden rounded-2xl bg-black">
+                <img id="lightbox-img" src="" alt="Preview" class="h-full w-full object-cover">
+                <span id="lightbox-badge" class="absolute left-4 top-4 rounded-lg border border-[#7C5CFF]/40 bg-black/70 px-3 py-1 font-mono-tech text-xs uppercase text-[#C6BAFF] backdrop-blur"></span>
+            </div>
+            <div class="mt-4 flex items-center justify-between px-2">
+                <div>
+                    <p id="lightbox-brand" class="font-mono-tech text-xs uppercase tracking-widest text-[#8B7BFF]"></p>
+                    <h3 id="lightbox-title" class="font-display text-xl font-extrabold text-white"></h3>
+                    <p id="lightbox-price" class="mt-1 font-display text-lg font-bold text-[#25D366]"></p>
+                </div>
+                <button onclick="closePhotoLightbox()" class="rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold text-white hover:bg-white/20">Close Preview</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         3. CHECKOUT & ANIMATED CARD DETAILS MODAL
+         ========================================== -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 p-3 sm:p-6 backdrop-blur-md">
+        <div class="animate-modal relative max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-3xl border border-white/15 bg-[#0D0D14] p-6 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                    <p class="font-mono-tech text-[10px] uppercase tracking-widest text-[#8B7BFF]">Secure Checkout</p>
+                    <h3 class="font-display text-xl font-bold text-white">Complete Your Order</h3>
+                </div>
+                <button onclick="closeCheckoutModal()" class="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/5 text-white/60 hover:text-white">✕</button>
+            </div>
+
+            <!-- Checkout Form Content -->
+            <form id="checkout-form" onsubmit="submitOrder(event)" class="mt-5 space-y-4">
+                
+                <!-- Live Animated Credit Card Preview -->
+                <div class="credit-card-bg relative overflow-hidden rounded-2xl border border-white/20 p-5 shadow-[0_20px_50px_rgba(124,92,255,0.3)] transition-transform duration-300 hover:scale-[1.01]">
+                    <div class="flex items-center justify-between">
+                        <span class="font-mono-tech text-[11px] uppercase tracking-widest text-white/70">Fast&amp;Fix Priority Card</span>
+                        <span class="font-display text-sm font-extrabold italic text-white">VISA / MASTER</span>
+                    </div>
+                    <div class="my-4 flex items-center gap-3">
+                        <div class="h-8 w-11 rounded-md bg-gradient-to-br from-yellow-300 to-yellow-600 opacity-90"></div>
+                        <span class="text-xs text-white/50">)))</span>
+                    </div>
+                    <p id="card-preview-num" class="font-mono-tech text-lg sm:text-xl tracking-[0.2em] text-white">•••• •••• •••• ••••</p>
+                    <div class="mt-4 flex justify-between text-xs">
+                        <div>
+                            <p class="text-[9px] uppercase text-white/40">Card Holder</p>
+                            <p id="card-preview-name" class="font-mono-tech uppercase text-white">YOUR NAME</p>
+                        </div>
+                        <div>
+                            <p class="text-[9px] uppercase text-white/40">Expires</p>
+                            <p id="card-preview-exp" class="font-mono-tech text-white">MM/YY</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Info -->
+                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div>
+                        <label class="text-xs text-white/60">Full Name *</label>
+                        <input type="text" id="cust-name" required placeholder="Ex: Sahas Perera" class="mt-1 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-sm text-white outline-none focus:border-[#7C5CFF]">
+                    </div>
+                    <div>
+                        <label class="text-xs text-white/60">Phone Number *</label>
+                        <input type="tel" id="cust-phone" required placeholder="07X XXX XXXX" class="mt-1 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-sm text-white outline-none focus:border-[#7C5CFF]">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-white/60">Delivery Address *</label>
+                    <input type="text" id="cust-address" required placeholder="House No, Street, City" class="mt-1 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-sm text-white outline-none focus:border-[#7C5CFF]">
+                </div>
+
+                <!-- Card Inputs -->
+                <div class="rounded-2xl border border-white/10 bg-white/[0.02] p-4 space-y-3">
+                    <p class="font-mono-tech text-[10px] uppercase tracking-wider text-[#8B7BFF]">Card Details (128-bit Encrypted)</p>
+                    <div>
+                        <input type="text" id="card-num" maxlength="19" required placeholder="Card Number (XXXX XXXX XXXX XXXX)" oninput="updateCardPreview()" class="w-full rounded-xl border border-white/10 bg-black/40 px-3.5 py-2.5 font-mono-tech text-sm text-white outline-none focus:border-[#7C5CFF]">
+                    </div>
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <input type="text" id="card-name" required placeholder="Name on Card" oninput="updateCardPreview()" class="col-span-1 rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-xs text-white outline-none focus:border-[#7C5CFF]">
+                        <input type="text" id="card-exp" maxlength="5" required placeholder="MM/YY" oninput="updateCardPreview()" class="rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 font-mono-tech text-xs text-white outline-none focus:border-[#7C5CFF]">
+                        <input type="password" id="card-cvv" maxlength="4" required placeholder="CVV" class="rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 font-mono-tech text-xs text-white outline-none focus:border-[#7C5CFF]">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between rounded-xl bg-[#7C5CFF]/10 px-4 py-3 border border-[#7C5CFF]/30">
+                    <span class="text-xs text-white/70">Total Payable:</span>
+                    <span id="checkout-total-Amount" class="font-display text-lg font-extrabold text-white">Rs. 0</span>
+                </div>
+
+                <button type="submit" id="pay-btn" class="w-full rounded-xl bg-gradient-to-r from-[#7C5CFF] to-[#2E9BFF] py-3.5 font-display text-sm font-bold text-white shadow-[0_0_30px_rgba(124,92,255,0.6)] transition hover:scale-[1.01] active:scale-95">
+                    Pay &amp; Place Order Now
+                </button>
+            </form>
+
+            <!-- Order Success Animation View -->
+            <div id="order-success-view" class="hidden py-8 text-center space-y-4">
+                <div class="mx-auto grid h-20 w-20 place-items-center rounded-full bg-[#25D366]/20 text-4xl text-[#25D366] shadow-[0_0_40px_rgba(37,211,102,0.5)] animate-bounce">✓</div>
+                <h3 class="font-display text-2xl font-extrabold text-white">Order Placed Successfully!</h3>
+                <p id="order-success-msg" class="text-sm text-white/60 max-w-sm mx-auto"></p>
+                <div class="pt-4 flex flex-col gap-2">
+                    <button onclick="sendConfirmedOrderToWA()" class="w-full rounded-xl bg-[#25D366] py-3 text-sm font-bold text-black hover:opacity-90 transition">
+                        Send Order Receipt to WhatsApp
+                    </button>
+                    <button onclick="closeCheckoutModal()" class="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 text-xs text-white/70 hover:text-white">
+                        Back to Store
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         4. FLOATING WHATSAPP SUPPORT ICON & POPUP
+         ========================================== -->
+    <div class="fixed bottom-6 left-6 z-50">
+        <!-- Support Popup Card -->
+        <div id="wa-support-popup" class="mb-3 hidden w-72 rounded-2xl border border-[#25D366]/40 bg-[#0B0B10]/95 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-xl animate-modal">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <span class="relative flex h-3 w-3">
+                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#25D366] opacity-75"></span>
+                        <span class="relative inline-flex h-3 w-3 rounded-full bg-[#25D366]"></span>
+                    </span>
+                    <div>
+                        <p class="font-display text-xs font-bold text-white">Fast&amp;Fix Support</p>
+                        <p class="text-[10px] text-[#25D366]">Typically replies instantly</p>
+                    </div>
+                </div>
+                <button onclick="toggleSupportPopup()" class="text-xs text-white/50 hover:text-white">✕</button>
+            </div>
+            <div class="my-3 rounded-xl bg-white/[0.04] p-3 text-xs leading-relaxed text-white/80">
+                👋 Hi there! Need help building a PC or checking component prices? Click our number below to chat on WhatsApp!
+            </div>
+            <a href="https://wa.me/94784393176?text=Hi%20Fast%20%26%20Fix%20Support%2C%20I%20need%20some%20help%20with%20PC%20parts." target="_blank" class="flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3 text-xs font-extrabold text-black shadow-[0_0_20px_rgba(37,211,102,0.5)] transition hover:scale-[1.02]">
+                <span>📞 +94 78 439 3176</span>
+            </a>
+        </div>
+
+        <!-- Floating Button -->
+        <button onclick="toggleSupportPopup()" class="wa-pulse group relative flex items-center gap-2.5 rounded-full bg-[#25D366] px-4 py-3.5 text-black shadow-[0_0_30px_rgba(37,211,102,0.6)] transition hover:scale-105 active:scale-95">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <span class="font-display text-xs font-extrabold tracking-tight">Support Chat</span>
+        </button>
+    </div>
+
+    <!-- ==========================================
+         5. TOAST NOTIFICATION (CART & WHATSAPP)
+         ========================================== -->
+    <div id="wa-toast" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-2xl border border-[#7C5CFF]/40 bg-[#0A0A0C]/95 px-4 py-3 shadow-[0_0_25px_rgba(124,92,255,0.3)] backdrop-blur-md transition-all duration-500 translate-y-20 opacity-0 pointer-events-none">
+        <div class="grid h-8 w-8 place-items-center rounded-full bg-[#25D366]/20 text-[#25D366]">✓</div>
+        <div>
+            <p class="font-display text-[13px] font-bold text-white" id="toast-title">Added to Cart</p>
+            <p class="text-[11.5px] text-white/60" id="wa-product-name">Product Name</p>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         MASTER JAVASCRIPT ENGINE (24 UNIQUE PHOTO ITEMS)
+         ========================================== -->
+    <script>
+        const WHATSAPP_NUMBER = "94784393176";
+
+        // 1. ALL 24 PRODUCTS DATABASE WITH UNIQUE PHOTOS & FALLBACKS (IN LKR)
+        const PRODUCTS = [
+            // ================= GRAPHIC CARDS (6 MODELS) =================
+            { id: 'gpu1', cat: 'gpu', featured: true, brand: 'NVIDIA', name: 'GeForce RTX 4090 24GB', sub: '24GB GDDR6X · Founders Edition', specs: ['24GB GDDR6X', '16384 CUDA', 'PCIe 4.0'], price: 569900, oldPrice: 629900, badge: 'Flagship', discount: '-10%', img: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/955527aa-d194-4c44-9b8d-fc5a6f1fb5e7.jpg', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/bcbd4e56-69d8-4709-8849-fd1da1a3a285.jpg' },
+            { id: 'gpu2', cat: 'gpu', featured: false, brand: 'ASUS ROG', name: 'ROG Strix RTX 4080 Super', sub: '16GB GDDR6X · OC Aura RGB', specs: ['16GB VRAM', 'DLSS 3.5', 'Triple Axial'], price: 365000, oldPrice: 390000, badge: 'ROG Strix', discount: '-6%', img: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/bcbd4e56-69d8-4709-8849-fd1da1a3a285.jpg' },
+            { id: 'gpu3', cat: 'gpu', featured: false, brand: 'MSI GAMING', name: 'RTX 4070 Ti Super Gaming X', sub: '16GB GDDR6X · TRI FROZR 3', specs: ['16GB VRAM', '2670 MHz', 'TORX Fan 5.0'], price: 285000, oldPrice: 299000, badge: 'Best 1440p', discount: '-5%', img: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/955527aa-d194-4c44-9b8d-fc5a6f1fb5e7.jpg' },
+            { id: 'gpu4', cat: 'gpu', featured: false, brand: 'AMD RADEON', name: 'Sapphire Nitro+ RX 7900 XTX', sub: '24GB GDDR6 · Vapor-X ARGB', specs: ['24GB GDDR6', 'RDNA 3', 'Vapor Chamber'], price: 310000, oldPrice: 335000, badge: '24GB Beast', discount: '-7%', img: 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/bcbd4e56-69d8-4709-8849-fd1da1a3a285.jpg' },
+            { id: 'gpu5', cat: 'gpu', featured: false, brand: 'GIGABYTE', name: 'AORUS RTX 4070 Super Master', sub: '12GB GDDR6X · LCD Edge View', specs: ['12GB GDDR6X', 'LCD Screen', 'WINDFORCE'], price: 224000, oldPrice: null, badge: 'Hot Seller', discount: null, img: 'https://images.unsplash.com/photo-1624705002806-5d72df19c3ad?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/955527aa-d194-4c44-9b8d-fc5a6f1fb5e7.jpg' },
+            { id: 'gpu6', cat: 'gpu', featured: false, brand: 'ASUS TUF', name: 'TUF Gaming RTX 4060 Ti 16GB', sub: '16GB VRAM · Military-Grade', specs: ['16GB GDDR6', 'DLSS 3', 'Axial-tech'], price: 168500, oldPrice: 179000, badge: 'Budget King', discount: '-6%', img: 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/bcbd4e56-69d8-4709-8849-fd1da1a3a285.jpg' },
+
+            // ================= PROCESSORS (6 MODELS) =================
+            { id: 'cpu1', cat: 'cpu', featured: true, brand: 'INTEL', name: 'Core i9-14900K Unlocked', sub: '24 cores · 32 threads · 6.0 GHz', specs: ['24 Cores', '6.0 GHz Boost', 'LGA 1700'], price: 176900, oldPrice: 189000, badge: 'Hot', discount: '-6%', img: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/0b325ba7-5343-4add-9a61-4d057230c388.jpg', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/251b9b23-8d60-46a0-ae81-e180bd3b8215.jpg' },
+            { id: 'cpu2', cat: 'cpu', featured: false, brand: 'AMD RYZEN', name: 'Ryzen 7 7800X3D Gaming', sub: '8 cores · 16 threads · 3D V-Cache', specs: ['96MB L3 Cache', '5.0 GHz', 'AM5 Socket'], price: 142500, oldPrice: 155000, badge: '#1 Gaming CPU', discount: '-8%', img: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/251b9b23-8d60-46a0-ae81-e180bd3b8215.jpg', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/0b325ba7-5343-4add-9a61-4d057230c388.jpg' },
+            { id: 'cpu3', cat: 'cpu', featured: false, brand: 'INTEL', name: 'Core i7-14700K 20-Core', sub: '20 cores · 28 threads · 5.6 GHz', specs: ['20 Cores', '5.6 GHz', 'LGA 1700'], price: 128000, oldPrice: null, badge: 'Best Value', discount: null, img: 'https://images.unsplash.com/photo-1555617778-02518510b9fa?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/0b325ba7-5343-4add-9a61-4d057230c388.jpg' },
+            { id: 'cpu4', cat: 'cpu', featured: false, brand: 'AMD RYZEN', name: 'Ryzen 9 7950X3D Extreme', sub: '16 cores · 32 threads · 5.7 GHz', specs: ['16 Cores', '144MB Cache', 'AM5'], price: 215000, oldPrice: 229000, badge: 'Workstation', discount: '-6%', img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/251b9b23-8d60-46a0-ae81-e180bd3b8215.jpg' },
+            { id: 'cpu5', cat: 'cpu', featured: false, brand: 'INTEL', name: 'Core i5-14600K Unlocked', sub: '14 cores · 20 threads · 5.3 GHz', specs: ['14 Cores', 'DDR5 Support', 'LGA 1700'], price: 96500, oldPrice: 104000, badge: 'Mid-Range King', discount: '-7%', img: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/0b325ba7-5343-4add-9a61-4d057230c388.jpg' },
+            { id: 'cpu6', cat: 'cpu', featured: false, brand: 'AMD RYZEN', name: 'Ryzen 5 7600X 6-Core', sub: '6 cores · 12 threads · 5.3 GHz Boost', specs: ['Zen 4 Core', '5.3 GHz', 'AM5 Socket'], price: 69900, oldPrice: null, badge: 'Entry AM5', discount: null, img: 'https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/251b9b23-8d60-46a0-ae81-e180bd3b8215.jpg' },
+
+            // ================= MOTHERBOARDS (6 MODELS) =================
+            { id: 'mobo1', cat: 'mobo', featured: false, brand: 'ASUS ROG', name: 'ROG Maximus Z790 Dark Hero', sub: 'LGA 1700 · DDR5 8000+ · WiFi 7', specs: ['20+1 Power', 'PCIe 5.0', 'WiFi 7'], price: 198000, oldPrice: 215000, badge: 'Flagship Z790', discount: '-8%', img: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/7f367d4d-a2d3-4b44-a078-12d2c5557053.jpg', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/7f367d4d-a2d3-4b44-a078-12d2c5557053.jpg' },
+            { id: 'mobo2', cat: 'mobo', featured: false, brand: 'MSI MEG', name: 'MEG X670E ACE AM5', sub: 'Extended ATX · DDR5 · Dual 10G LAN', specs: ['AM5 Socket', 'PCIe 5.0 M.2', '22+2+1 VRM'], price: 185000, oldPrice: null, badge: 'Extreme AM5', discount: null, img: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/7f367d4d-a2d3-4b44-a078-12d2c5557053.jpg' },
+            { id: 'mobo3', cat: 'mobo', featured: false, brand: 'ASUS ROG', name: 'ROG Strix B650E-F Gaming WiFi', sub: 'AM5 · PCIe 5.0 · Aura Sync RGB', specs: ['AM5 Socket', 'DDR5 6400+', 'WiFi 6E'], price: 94500, oldPrice: 102000, badge: 'Best Seller', discount: '-7%', img: 'https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/7f367d4d-a2d3-4b44-a078-12d2c5557053.jpg' },
+            { id: 'mobo4', cat: 'mobo', featured: false, brand: 'GIGABYTE', name: 'Z790 AORUS Elite AX Ice', sub: 'All-White PCB · LGA 1700 · DDR5', specs: ['White Theme', 'PCIe 5.0', '4x M.2 Slots'], price: 108000, oldPrice: 116000, badge: 'White Edition', discount: '-7%', img: 'https://images.unsplash.com/photo-1541140532154-b024d705b90a?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/7f367d4d-a2d3-4b44-a078-12d2c5557053.jpg' },
+            { id: 'mobo5', cat: 'mobo', featured: false, brand: 'MSI MAG', name: 'MAG B760 Tomahawk WiFi', sub: 'LGA 1700 · DDR5 · 2.5G LAN', specs: ['12+1+1 VRM', 'DDR5 7000+', 'WiFi 6E'], price: 72500, oldPrice: null, badge: 'Solid Build', discount: null, img: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/0b325ba7-5343-4add-9a61-4d057230c388.jpg', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/7f367d4d-a2d3-4b44-a078-12d2c5557053.jpg' },
+            { id: 'mobo6', cat: 'mobo', featured: false, brand: 'ASROCK', name: 'X670E Taichi Carrara', sub: 'Marble Finish · 24+2+1 Phase SPS', specs: ['USB4 Type-C', 'DDR5 ECC', 'Killer WiFi'], price: 164000, oldPrice: 175000, badge: 'Creator Pro', discount: '-6%', img: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/7df0cd5c-1c7a-404c-8b46-02c46be407ef.jpg', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/7f367d4d-a2d3-4b44-a078-12d2c5557053.jpg' },
+
+            // ================= PERIPHERALS, RAM & COOLING (6 MODELS) =================
+            { id: 'gear1', cat: 'gear', featured: true, brand: 'G.SKILL', name: 'Trident Z5 RGB 32GB DDR5', sub: '2×16GB DDR5-7200MHz CL34', specs: ['DDR5-7200', 'CL34 Latency', 'XMP 3.0'], price: 49900, oldPrice: 59900, badge: 'RGB RAM', discount: '-18%', img: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/43e7108c-c340-4153-97b1-6ea52b77d426.jpg', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/43e7108c-c340-4153-97b1-6ea52b77d426.jpg' },
+            { id: 'gear2', cat: 'gear', featured: true, brand: 'SAMSUNG', name: '990 PRO 2TB NVMe SSD', sub: 'PCIe 4.0 M.2 · 7450 MB/s Read', specs: ['7450 MB/s', 'PCIe 4.0', '2TB Capacity'], price: 56900, oldPrice: 68900, badge: 'Best Seller', discount: '-17%', img: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/faaad5ce-5130-443f-ad63-a82967d0abd3.jpg', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/faaad5ce-5130-443f-ad63-a82967d0abd3.jpg' },
+            { id: 'gear3', cat: 'gear', featured: false, brand: 'RAZER', name: 'Huntsman V3 Pro Analog', sub: 'Optical eSports Keyboard · Rapid Trigger', specs: ['Gen-2 Optical', 'Rapid Trigger', 'Wrist Rest'], price: 74500, oldPrice: null, badge: 'Pro Keyboard', discount: null, img: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/6ba1d657-39dd-4cd1-853e-93189aea4b1f.jpg', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/6ba1d657-39dd-4cd1-853e-93189aea4b1f.jpg' },
+            { id: 'gear4', cat: 'gear', featured: false, brand: 'NZXT', name: 'Kraken Elite 360 RGB AIO', sub: '360mm Liquid Cooler with Custom LCD', specs: ['2.36" LCD', 'F120 RGB Core', 'Asetek Pump'], price: 88000, oldPrice: 95000, badge: 'Liquid Cooler', discount: '-7%', img: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/ba1ee6c8-9a13-42d6-a578-d7e32d3fd67d.jpg', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/ba1ee6c8-9a13-42d6-a578-d7e32d3fd67d.jpg' },
+            { id: 'gear5', cat: 'gear', featured: false, brand: 'LOGITECH G', name: 'G Pro X Superlight 2 Wireless', sub: '60g Ultra-Lightweight · HERO 2 Sensor', specs: ['60 Grams', '32,000 DPI', '4000Hz Poll'], price: 52500, oldPrice: 56000, badge: 'eSports Mouse', discount: '-6%', img: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/6ba1d657-39dd-4cd1-853e-93189aea4b1f.jpg' },
+            { id: 'gear6', cat: 'gear', featured: false, brand: 'CORSAIR', name: 'Dominator Titanium 64GB DDR5', sub: '2×32GB DDR5-6600MHz First Edition', specs: ['64GB Kit', 'DHX Cooling', 'iCUE RGB'], price: 94000, oldPrice: null, badge: '64GB Extreme', discount: null, img: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&w=800&q=80', fallback: 'https://api.whacka.app/storage/v1/object/public/app-images/0106687c-1f3e-4f1c-a199-4607f170cefa/43e7108c-c340-4153-97b1-6ea52b77d426.jpg' }
+        ];
+
+        // Initial Cart State (in LKR)
+        let cart = [
+            { ...PRODUCTS[0], qty: 1 },
+            { ...PRODUCTS[6], qty: 1 },
+            { ...PRODUCTS[18], qty: 1 }
+        ];
+
+        function formatLKR(num) {
+            return "Rs. " + num.toLocaleString('en-LK');
+        }
+
+        // ========================================================
+        // 2. ANIMATED PRODUCT CARD HTML GENERATOR (FIXED LAYOUT)
+        // ========================================================
+        function createProductCardHTML(p, index = 0) {
+            const delay = index * 75; // Staggered wave animation delay
+            return `
+            <div style="animation-delay: ${delay}ms;" class="animate-card-wave product-card-box">
+                <div onclick="openPhotoLightbox('${p.id}')" class="product-img-wrapper">
+                    <img src="${p.img}" onerror="this.onerror=null;this.src='${p.fallback}';" alt="${p.name}" loading="lazy">
+                    <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0B0B10] via-transparent to-black/20 z-10"></div>
+                    <span class="absolute left-3.5 top-3.5 rounded-md border border-[#7C5CFF]/50 bg-black/70 px-2.5 py-1 font-mono-tech text-[9.5px] uppercase tracking-[0.16em] text-[#C6BAFF] backdrop-blur-md shadow-lg z-20">${p.badge}</span>
+                    ${p.discount ? `<span class="absolute right-3.5 top-3.5 rounded-md bg-[#2E9BFF]/30 border border-[#2E9BFF]/40 px-2 py-1 font-mono-tech text-[9.5px] font-semibold uppercase tracking-[0.14em] text-[#9BD2FF] backdrop-blur-md z-20">${p.discount}</span>` : ''}
+                    <span class="absolute bottom-2.5 right-3 rounded-lg bg-black/65 px-2 py-1 font-mono-tech text-[9px] text-white/70 opacity-0 transition-opacity duration-300 group-hover:opacity-100 backdrop-blur z-20">🔍 Zoom</span>
+                </div>
+                <div class="product-info-wrapper">
+                    <p class="font-mono-tech text-[10px] uppercase tracking-[0.22em] text-[#8B7BFF]">${p.brand}</p>
+                    <h3 class="mt-1 font-display text-[17px] font-bold leading-snug text-white group-hover:text-[#C6BAFF] transition">${p.name}</h3>
+                    <p class="mt-1 text-[12px] text-white/50">${p.sub}</p>
+                    <ul class="mt-3 flex flex-wrap gap-1.5">
+                        ${p.specs.map(s => `<li class="rounded-md border border-white/[0.08] bg-white/[0.03] px-2 py-1 font-mono-tech text-[9px] uppercase text-white/60">${s}</li>`).join('')}
+                    </ul>
+                    <div class="mt-auto pt-5">
+                        <div class="flex items-baseline justify-between mb-3">
+                            <p class="font-display text-lg font-extrabold text-white">${formatLKR(p.price)}</p>
+                            ${p.oldPrice ? `<p class="font-mono-tech text-[11px] text-white/30 line-through">${formatLKR(p.oldPrice)}</p>` : ''}
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="addToCart('${p.id}')" type="button" class="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white/[0.07] px-3 py-2.5 text-[11.5px] font-semibold text-white ring-1 ring-inset ring-white/10 transition hover:bg-gradient-to-r hover:from-[#7C5CFF] hover:to-[#2E9BFF] hover:ring-transparent active:scale-95">
+                                🛒 Add Cart
+                            </button>
+                            <button onclick="orderViaWhatsApp('${p.name}', '${formatLKR(p.price)}')" type="button" class="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#25D366]/15 px-3 py-2.5 text-[11.5px] font-semibold text-[#25D366] ring-1 ring-inset ring-[#25D366]/30 transition hover:bg-[#25D366] hover:text-black active:scale-95">
+                                WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // Render Featured Grid on Load
+        function renderFeatured() {
+            const container = document.getElementById('featured-grid');
+            const featuredItems = PRODUCTS.filter(p => p.featured);
+            container.innerHTML = featuredItems.map((p, idx) => createProductCardHTML(p, idx)).join('');
+        }
+
+        // PHOTO LIGHTBOX PREVIEW FUNCTIONS
+        function openPhotoLightbox(id) {
+            const p = PRODUCTS.find(x => x.id === id);
+            if (!p) return;
+            const imgEl = document.getElementById('lightbox-img');
+            imgEl.src = p.img;
+            imgEl.onerror = function() { this.src = p.fallback; };
+            document.getElementById('lightbox-badge').innerText = p.badge;
+            document.getElementById('lightbox-brand').innerText = p.brand + " · " + p.specs.join(' · ');
+            document.getElementById('lightbox-title').innerText = p.name;
+            document.getElementById('lightbox-price').innerText = formatLKR(p.price);
+            const lb = document.getElementById('photo-lightbox');
+            lb.classList.remove('hidden');
+            lb.classList.add('flex');
+        }
+
+        function closePhotoLightbox() {
+            const lb = document.getElementById('photo-lightbox');
+            lb.classList.add('hidden');
+            lb.classList.remove('flex');
+        }
+
+        // 3. CATEGORY MODAL FUNCTIONS WITH STAGGERED ANIMATION
+        function openCategoryModal(cat) {
+            document.getElementById('category-modal').classList.remove('hidden');
+            document.getElementById('category-modal').classList.add('flex');
+            renderCategoryItems(cat);
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('category-modal').classList.add('hidden');
+            document.getElementById('category-modal').classList.remove('flex');
+        }
+
+        function renderCategoryItems(cat) {
+            const titles = {
+                'all': 'All 24 Components Catalog (LKR)',
+                'gpu': 'Graphic Cards · NVIDIA RTX & AMD Radeon (6 Models)',
+                'cpu': 'Processors · Intel 14th Gen & AMD Ryzen (6 Models)',
+                'mobo': 'Motherboards · Z790, X670E & B650 (6 Models)',
+                'gear': 'Peripherals, DDR5 RAM, SSD & Cooling (6 Models)'
+            };
+            document.getElementById('cat-modal-title').innerText = titles[cat] || titles['all'];
+
+            document.querySelectorAll('.cat-tab').forEach(btn => {
+                btn.className = "cat-tab rounded-xl px-3.5 py-2 text-xs font-semibold bg-white/5 text-white/70 hover:text-white transition";
+            });
+            const activeTab = document.getElementById('tab-' + cat);
+            if(activeTab) activeTab.className = "cat-tab rounded-xl px-3.5 py-2 text-xs font-semibold bg-[#7C5CFF] text-white shadow-[0_0_20px_rgba(124,92,255,0.6)] transition";
+
+            const filtered = cat === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.cat === cat);
+            const grid = document.getElementById('category-modal-grid');
+            grid.innerHTML = filtered.map((p, idx) => createProductCardHTML(p, idx)).join('');
+            grid.scrollTop = 0;
+        }
+
+        // 4. CART SYSTEM (LKR)
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            const badge = document.getElementById('cart-badge');
+            const countText = document.getElementById('cart-count-text');
+            const totalEl = document.getElementById('cart-total-price');
+
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            badge.innerText = totalQty;
+            countText.innerText = `${totalQty} item${totalQty === 1 ? '' : 's'} selected`;
+            totalEl.innerText = formatLKR(totalPrice);
+            document.getElementById('checkout-total-Amount').innerText = formatLKR(totalPrice);
+
+            if (cart.length === 0) {
+                container.innerHTML = `<div class="py-16 text-center text-white/40 text-sm">Your build cart is empty.<br>Add components to start building!</div>`;
+                return;
+            }
+
+            container.innerHTML = cart.map(item => `
+                <div class="flex items-center gap-3.5 rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+                    <img src="${item.img}" onerror="this.onerror=null;this.src='${item.fallback}';" class="h-16 w-16 rounded-xl object-cover">
+                    <div class="flex-1">
+                        <p class="font-mono-tech text-[9px] uppercase text-[#8B7BFF]">${item.brand}</p>
+                        <h4 class="font-display text-sm font-bold text-white">${item.name}</h4>
+                        <p class="text-xs font-semibold text-white/80 mt-0.5">${formatLKR(item.price * item.qty)}</p>
+                        <div class="mt-2 flex items-center gap-2">
+                            <button onclick="updateQty('${item.id}', -1)" class="h-6 w-6 rounded-md bg-white/10 text-xs hover:bg-white/20">-</button>
+                            <span class="font-mono-tech text-xs">${item.qty}</span>
+                            <button onclick="updateQty('${item.id}', 1)" class="h-6 w-6 rounded-md bg-white/10 text-xs hover:bg-white/20">+</button>
+                        </div>
+                    </div>
+                    <button onclick="removeFromCart('${item.id}')" class="text-white/30 hover:text-red-400 p-1">🗑</button>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            const product = PRODUCTS.find(p => p.id === id);
+            if (!product) return;
+            const existing = cart.find(i => i.id === id);
+            if (existing) existing.qty += 1;
+            else cart.push({ ...product, qty: 1 });
+            renderCart();
+            showToast("Added to Build Cart 🛒", `${product.name} (${formatLKR(product.price)})`);
+        }
+
+        function updateQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+            renderCart();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            renderCart();
+        }
+
+        function toggleCart(open) {
+            const drawer = document.getElementById('cart-drawer');
+            const backdrop = document.getElementById('cart-backdrop');
+            const panel = document.getElementById('cart-panel');
+            if (open) {
+                drawer.classList.remove('pointer-events-none');
+                backdrop.classList.remove('opacity-0');
+                backdrop.classList.add('opacity-100');
+                panel.classList.remove('translate-x-full');
+            } else {
+                drawer.classList.add('pointer-events-none');
+                backdrop.classList.add('opacity-0');
+                backdrop.classList.remove('opacity-100');
+                panel.classList.add('translate-x-full');
+            }
+        }
+
+        // 5. WHATSAPP ORDERING FUNCTIONS
+        function showToast(title, sub) {
+            const toast = document.getElementById('wa-toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('wa-product-name').innerText = sub;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2200);
+        }
+
+        function orderViaWhatsApp(productName, price) {
+            const message = `Hi Fast & Fix, I would like to order:\n\n*Product:* ${productName}\n*Price:* ${price}\n\nIs this available in stock?`;
+            const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+            showToast("Opening WhatsApp...", productName);
+            setTimeout(() => window.open(waUrl, '_blank'), 900);
+        }
+
+        function checkoutViaWhatsApp() {
+            if (cart.length === 0) return alert("Your cart is empty!");
+            const lines = cart.map(i => `• ${i.name} (x${i.qty}) - ${formatLKR(i.price * i.qty)}`).join('\n');
+            const total = formatLKR(cart.reduce((s, i) => s + i.price * i.qty, 0));
+            const msg = `Hi Fast & Fix, I want to place a build order:\n\n${lines}\n\n*Total:* ${total}\n\nPlease confirm availability!`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // 6. CHECKOUT & ANIMATED CREDIT CARD PREVIEW
+        function openCheckoutModal() {
+            if (cart.length === 0) return alert("Please add items to your cart first!");
+            toggleCart(false);
+            document.getElementById('checkout-form').classList.remove('hidden');
+            document.getElementById('order-success-view').classList.add('hidden');
+            document.getElementById('checkout-modal').classList.remove('hidden');
+            document.getElementById('checkout-modal').classList.add('flex');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+            document.getElementById('checkout-modal').classList.remove('flex');
+        }
+
+        function updateCardPreview() {
+            let numInput = document.getElementById('card-num');
+            let raw = numInput.value.replace(/\D/g, '').substring(0, 16);
+            let formatted = raw.replace(/(.{4})/g, '$1 ').trim();
+            numInput.value = formatted;
+
+            document.getElementById('card-preview-num').innerText = formatted || '•••• •••• •••• ••••';
+            document.getElementById('card-preview-name').innerText = document.getElementById('card-name').value || 'YOUR NAME';
+            document.getElementById('card-preview-exp').innerText = document.getElementById('card-exp').value || 'MM/YY';
+        }
+
+        let lastOrderSummary = "";
+        function submitOrder(e) {
+            e.preventDefault();
+            const btn = document.getElementById('pay-btn');
+            btn.innerText = "Processing Payment...";
+            btn.disabled = true;
+
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const addr = document.getElementById('cust-address').value;
+            const total = formatLKR(cart.reduce((s, i) => s + i.price * i.qty, 0));
+            const orderId = "FF-" + Math.floor(100000 + Math.random() * 900000);
+
+            const itemsList = cart.map(i => `${i.name} x${i.qty}`).join(', ');
+            lastOrderSummary = `*Order ID:* ${orderId}\n*Customer:* ${name} (${phone})\n*Address:* ${addr}\n*Items:* ${itemsList}\n*Total Paid:* ${total}`;
+
+            setTimeout(() => {
+                btn.innerText = "Pay & Place Order Now";
+                btn.disabled = false;
+                document.getElementById('checkout-form').classList.add('hidden');
+                document.getElementById('order-success-view').classList.remove('hidden');
+                document.getElementById('order-success-msg').innerText = `Thank you ${name}! Your Order #${orderId} (${total}) has been confirmed and sent to our workshop bench.`;
+                cart = [];
+                renderCart();
+            }, 1200);
+        }
+
+        function sendConfirmedOrderToWA() {
+            const msg = `Hi Fast & Fix, I just completed my order on the website!\n\n${lastOrderSummary}`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // 7. SUPPORT POPUP TOGGLE
+        function toggleSupportPopup() {
+            const popup = document.getElementById('wa-support-popup');
+            popup.classList.toggle('hidden');
+        }
+
+        // 8. HERO IMAGE SLIDER ENGINE
+        const heroSlidesData = [
+            { tag: 'Signature Build · 01', title: 'Fast&Fix · Titan RTX 4090' },
+            { tag: 'Custom Water Loop · 02', title: 'Fast&Fix · Hydro Spec Ops' },
+            { tag: 'Cyberpunk Edition · 03', title: 'Fast&Fix · Neon Hyperion' },
+            { tag: 'All-White Flagship · 04', title: 'Fast&Fix · Frostbite i9' }
+        ];
+        let currentSlide = 0;
+
+        function setHeroSlide(index) {
+            currentSlide = index;
+            const slides = document.querySelectorAll('.hero-slide');
+            const dots = document.querySelectorAll('#hero-dots button');
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === index);
+            });
+            dots.forEach((d, i) => {
+                d.className = i === index ? "h-2 w-6 rounded-full bg-[#7C5CFF] transition-all" : "h-2 w-2 rounded-full bg-white/30 transition-all";
+            });
+            document.getElementById('hero-slide-tag').innerText = heroSlidesData[index].tag;
+            document.getElementById('hero-slide-title').innerText = heroSlidesData[index].title;
+            document.getElementById('hero-bg-img').src = slides[index].src;
+        }
+
+        setInterval(() => {
+            setHeroSlide((currentSlide + 1) % heroSlidesData.length);
+        }, 3500);
+
+        // Initialize Page
+        renderFeatured();
+        renderCart();
+    </script>
+</body>
+</html>
